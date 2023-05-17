@@ -16,6 +16,12 @@ defmodule Waffle.Storage.Google.CloudStorage.MixProject do
     ]
   end
 
+  def application do
+    [
+      extra_applications: [:httpoison]
+    ]
+  end
+
   # Specifies which paths to compile per environment.
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
@@ -38,9 +44,10 @@ defmodule Waffle.Storage.Google.CloudStorage.MixProject do
   defp deps do
     [
       {:waffle, "~> 1.1"},
-      {:goth, "~> 1.1"},
+      {:goth, "~> 1.4"},
       {:google_api_storage, "~> 0.14"},
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:httpoison, "~> 2.1"}
     ]
   end
 end
