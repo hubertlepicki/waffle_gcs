@@ -50,60 +50,60 @@ defmodule Waffle.Storage.Google.CloudStorageTest do
   describe "utility functions" do
     setup [:random_name, :create_wafile, :setup_waffle]
 
-    test "bucket/1 returns a bucket name based on a Waffle definition", %{definition: def} do
-      assert env_bucket() == CloudStorage.bucket(def)
+    test "bucket/1 returns a bucket name based on a Waffle definition", %{definition: definition} do
+      assert env_bucket() == CloudStorage.bucket(definition)
       assert "invalid" == CloudStorage.bucket(DummyDefinitionInvalidBucket)
     end
 
-    test "storage_dir/3 returns the remote storage directory (not the bucket)", %{definition: def, version: ver, meta: meta} do
-      assert @remote_dir == CloudStorage.storage_dir(def, ver, meta)
+    test "storage_dir/3 returns the remote storage directory (not the bucket)", %{definition: definition, version: ver, meta: meta} do
+      assert @remote_dir == CloudStorage.storage_dir(definition, ver, meta)
     end
 
-    test "path_for/3 returns the file full path (storage directory plus filename)", %{definition: def, version: ver, meta: meta, path: path} do
-      assert path == CloudStorage.path_for(def, ver, meta)
+    test "path_for/3 returns the file full path (storage directory plus filename)", %{definition: definition, version: ver, meta: meta, path: path} do
+      assert path == CloudStorage.path_for(definition, ver, meta)
     end
   end
 
   describe "waffle functions" do
     setup [:random_name, :create_wafile, :setup_waffle]
 
-    test "put/3 uploads a valid file", %{definition: def, version: ver, meta: meta} do
-      assert {:ok, _} = CloudStorage.put(def, ver, meta)
+    test "put/3 uploads a valid file", %{definition: definition, version: ver, meta: meta} do
+      assert {:ok, _} = CloudStorage.put(definition, ver, meta)
     end
 
-    test "put/3 uploads binary data", %{definition: def, version: ver, name: name} do
-      assert {:ok, _} = CloudStorage.put(def, ver, {%Waffle.File{binary: File.read!(@file_path), file_name: "#{name}.png"}, name})
+    test "put/3 uploads binary data", %{definition: definition, version: ver, name: name} do
+      assert {:ok, _} = CloudStorage.put(definition, ver, {%Waffle.File{binary: File.read!(@file_path), file_name: "#{name}.png"}, name})
     end
 
     test "put/3 fails for an invalid file", %{version: ver, meta: meta} do
       assert {:error, _} = CloudStorage.put(DummyDefinitionInvalidBucket, ver, meta)
     end
 
-    test "delete/3 successfully deletes existing object", %{definition: def, version: ver, meta: meta} do
-      assert {:ok, _} = CloudStorage.put(def, ver, meta)
-      assert {:ok, _} = CloudStorage.delete(def, ver, meta)
+    test "delete/3 successfully deletes existing object", %{definition: definition, version: ver, meta: meta} do
+      assert {:ok, _} = CloudStorage.put(definition, ver, meta)
+      assert {:ok, _} = CloudStorage.delete(definition, ver, meta)
     end
 
-    test "delete/3 fails for invalid bucket or object", %{definition: def, version: ver, meta: meta} do
-      assert {:error, _} = CloudStorage.delete(def, ver, meta)
+    test "delete/3 fails for invalid bucket or object", %{definition: definition, version: ver, meta: meta} do
+      assert {:error, _} = CloudStorage.delete(definition, ver, meta)
       assert {:error, _} = CloudStorage.delete(DummyDefinitionInvalidBucket, ver, meta)
     end
 
-    test "url/3 returns regular URLs", %{definition: def, version: ver, meta: meta, name: name} do
-      assert CloudStorage.url(def, ver, meta) =~ "/#{env_bucket()}/#{@remote_dir}/#{name}"
+    test "url/3 returns regular URLs", %{definition: definition, version: ver, meta: meta, name: name} do
+      assert CloudStorage.url(definition, ver, meta) =~ "/#{env_bucket()}/#{@remote_dir}/#{name}"
     end
 
-    test "url/3 returns signed URLs (v2)", %{definition: def, version: ver, meta: meta} do
-      assert {:ok, _} = CloudStorage.put(def, ver, meta)
-      url = CloudStorage.url(def, ver, meta, [signed: true])
+    test "url/3 returns signed URLs (v2)", %{definition: definition, version: ver, meta: meta} do
+      assert {:ok, _} = CloudStorage.put(definition, ver, meta)
+      url = CloudStorage.url(definition, ver, meta, [signed: true])
       assert url =~ "&Signature="
       assert {:ok, %{status_code: 200}} = HTTPoison.get(url)
     end
 
-    test "url/3 returns CDN URL without bucket name in path", %{definition: def, version: ver, meta: meta, name: name} do
+    test "url/3 returns CDN URL without bucket name in path", %{definition: definition, version: ver, meta: meta, name: name} do
       Application.put_env(:waffle, :asset_host, "cdn-domain.com")
 
-      assert CloudStorage.url(def, ver, meta) == "https://cdn-domain.com/#{@remote_dir}/#{name}.png"
+      assert CloudStorage.url(definition, ver, meta) == "https://cdn-domain.com/#{@remote_dir}/#{name}.png"
 
       Application.delete_env(:waffle, :asset_host)
     end
