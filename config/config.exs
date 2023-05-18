@@ -1,5 +1,5 @@
 import Config
 
 config :waffle,
-  storage: Waffle.Storage.Google.CloudStorage
+  storage: Waffle.Storage.Google
 

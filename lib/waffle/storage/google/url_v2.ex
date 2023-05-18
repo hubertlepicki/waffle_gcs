@@ -11,7 +11,7 @@ defmodule Waffle.Storage.Google.UrlV2 do
   use Waffle.Storage.Google.Url
 
   alias Waffle.Types
-  alias Waffle.Storage.Google.{CloudStorage, Util}
+  alias Waffle.Storage.Google.Util
 
   # Default expiration time is 3600 seconds, or 1 hour
   @default_expiry 3600
@@ -58,7 +58,7 @@ defmodule Waffle.Storage.Google.UrlV2 do
 
   @impl Waffle.Storage.Google.Url
   def build(definition, version, meta, options) do
-    path = CloudStorage.path_for(definition, version, meta)
+    path = Waffle.Storage.Google.path_for(definition, version, meta)
 
     if signed?(options) do
       build_signed_url(definition, path, options)
@@ -79,7 +79,7 @@ defmodule Waffle.Storage.Google.UrlV2 do
 
   @spec build_signed_url(Types.definition(), String.t(), Keyword.t()) :: String.t()
   defp build_signed_url(definition, path, options) do
-    {:ok, client_id} = Goth.Config.get(:client_email)
+    client_id = Application.get_env(:waffle_storage_google, :credentials)["client_email"]
 
     expiration = System.os_time(:second) + expiry(options)
 
@@ -111,7 +111,7 @@ defmodule Waffle.Storage.Google.UrlV2 do
   @spec bucket_and_path(Types.definition(), String.t()) :: String.t()
   defp bucket_and_path(definition, path) do
     definition
-    |> CloudStorage.bucket()
+    |> Waffle.Storage.Google.bucket()
     |> Path.join(path)
   end
 
@@ -122,7 +122,7 @@ defmodule Waffle.Storage.Google.UrlV2 do
 
   @spec sign_request(String.t()) :: String.t()
   defp sign_request(request) do
-    {:ok, pem_bin} = Goth.Config.get("private_key")
+    pem_bin = Application.get_env(:waffle_storage_google, :credentials)["private_key"]
     [pem_key_data] = :public_key.pem_decode(pem_bin)
     otp_release = System.otp_release() |> String.to_integer()
 

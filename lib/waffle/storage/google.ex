@@ -1,11 +1,11 @@
-defmodule Waffle.Storage.Google.CloudStorage do
+defmodule Waffle.Storage.Google do
   @moduledoc """
   The main storage integration for Waffle, this acts primarily as a wrapper
   around `Google.Api.Storage.V1`. To use this module with Waffle, simply set
   your `:storage` config appropriately:
 
   ```elixir
-  config :waffle, storage: Waffle.Storage.Google.CloudStorage
+  config :waffle, storage: Waffle.Storage.Google
   ```
 
   Ensure you have a valid bucket set, either through the configs or as an
@@ -13,8 +13,6 @@ defmodule Waffle.Storage.Google.CloudStorage do
   through `Goth` must have the appropriate level of access to the bucket,
   otherwise some (or all) calls may fail.
   """
-
-  @full_control_scope "https://www.googleapis.com/auth/devstorage.full_control"
 
   alias GoogleApi.Storage.V1.Connection
   alias GoogleApi.Storage.V1.Api.Objects
@@ -68,12 +66,11 @@ defmodule Waffle.Storage.Google.CloudStorage do
   end
 
   @doc """
-  Constructs a new connection object with scoped authentication. If no scope is
-  provided, the `devstorage.full_control` scope is used as a default.
+  Constructs a new connection.
   """
-  @spec conn(String.t()) :: Tesla.Env.client()
-  def conn(scope \\ @full_control_scope) do
-    {:ok, token} = Goth.Token.for_scope(scope)
+  @spec conn() :: Tesla.Env.client()
+  def conn() do
+    {:ok, token} = Goth.fetch(Waffle.Storage.Google.Goth)
     Connection.new(token.token)
   end
 

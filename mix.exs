@@ -1,24 +1,25 @@
-defmodule Waffle.Storage.Google.CloudStorage.MixProject do
+defmodule Waffle.Storage.Google.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :waffle_gcs,
-      name: "Waffle GCS",
+      app: :waffle_storage_google,
+      name: "Waffle backend for Google Cloud Storage",
       description: description(),
-      version: "0.1.1",
+      version: "0.0.1",
       elixir: "~> 1.4",
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
       package: package(),
-      source_url: "https://github.com/kolorahl/waffle_gcs",
-      homepage_url: "https://github.com/kolorahl/waffle_gcs"
+      source_url: "https://github.com/hubertlepicki/waffle_storage_google",
+      homepage_url: "https://github.com/hubertlepicki/waffle_storage_google"
     ]
   end
 
   def application do
     [
-      extra_applications: [:httpoison]
+      extra_applications: [:httpoison],
+      mod: {Waffle.Storage.Google.Application, []}
     ]
   end
 
@@ -34,7 +35,7 @@ defmodule Waffle.Storage.Google.CloudStorage.MixProject do
     [
       files: ~w(config/config.exs lib LICENSE mix.exs README.md),
       licenses: ["Apache-2.0"],
-      links: %{"GitHub" => "https://github.com/kolorahl/waffle_gcs"}
+      links: %{"GitHub" => "https://github.com/hubertlepicki/waffle_storage_google"}
     ]
   end
 

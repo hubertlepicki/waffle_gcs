@@ -1,7 +1,7 @@
-defmodule Waffle.Storage.Google.CloudStorageTest do
+defmodule Waffle.Storage.GoogleTest do
   use ExUnit.Case, async: true
 
-  alias Waffle.Storage.Google.CloudStorage
+  alias Waffle.Storage.Google, as: CloudStorage
 
   @file_name "image.png"
   @file_path "test/support/#{@file_name}"
@@ -40,11 +40,6 @@ defmodule Waffle.Storage.Google.CloudStorageTest do
   describe "conn/1" do
     test "constructs a Tesla client" do
       assert %Tesla.Client{} = CloudStorage.conn()
-    end
-
-    test "constructs a Tesla client with a custom scope" do
-      assert %Tesla.Client{} =
-               CloudStorage.conn("https://www.googleapis.com/auth/devstorage.read_only")
     end
   end
 

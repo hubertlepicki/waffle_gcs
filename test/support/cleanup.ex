@@ -1,10 +1,10 @@
-alias Waffle.Storage.Google.CloudStorage
+alias Waffle.Storage.Google
 alias GoogleApi.Storage.V1.Api.Objects
 
 defmodule Cleanup do
   def execute(_) do
-    conn = CloudStorage.conn()
-    bucket = CloudStorage.bucket(DummyDefinition)
+    conn = Google.conn()
+    bucket = Google.bucket(DummyDefinition)
     cleanup_bucket(conn, bucket)
   end
 
