@@ -6,7 +6,7 @@ defmodule Waffle.Storage.Google.MixProject do
       app: :waffle_storage_google,
       name: "Waffle backend for Google Cloud Storage",
       description: description(),
-      version: "0.0.1",
+      version: "0.0.2",
       elixir: "~> 1.4",
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
@@ -18,7 +18,6 @@ defmodule Waffle.Storage.Google.MixProject do
 
   def application do
     [
-      extra_applications: [:httpoison],
       mod: {Waffle.Storage.Google.Application, []}
     ]
   end
@@ -45,10 +44,9 @@ defmodule Waffle.Storage.Google.MixProject do
   defp deps do
     [
       {:waffle, "~> 1.1"},
-      {:goth, "~> 1.4"},
+      {:goth, "~> 1.4 or ~> 1.3"},
       {:google_api_storage, "~> 0.34"},
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
-      {:httpoison, "~> 2.1"}
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
     ]
   end
 end

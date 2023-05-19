@@ -120,7 +120,7 @@ defmodule Waffle.Storage.GoogleTest do
       assert {:ok, _} = CloudStorage.put(definition, ver, meta)
       url = CloudStorage.url(definition, ver, meta, signed: true)
       assert url =~ "&Signature="
-      assert {:ok, %{status_code: 200}} = HTTPoison.get(url)
+      assert {:ok, %{status: 200}} = Tesla.get(url)
     end
 
     test "url/3 returns CDN URL without bucket name in path", %{

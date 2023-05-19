@@ -5,4 +5,3 @@ config :waffle,
 
 config :waffle_storage_google,
   credentials: System.get_env("GCP_CREDENTIALS") |> Jason.decode!()
-

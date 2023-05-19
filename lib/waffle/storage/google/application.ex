@@ -4,7 +4,6 @@ defmodule Waffle.Storage.Google.Application do
 
   @full_control_scope "https://www.googleapis.com/auth/devstorage.full_control"
 
-
   def start(_type, _args) do
     credentials = Application.get_env(:waffle_storage_google, :credentials)
     scopes = Application.get_env(:waffle_storage_google, :scopes, [@full_control_scope])

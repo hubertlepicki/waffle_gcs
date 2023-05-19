@@ -27,7 +27,7 @@ Add it to your mix dependencies:
 defp deps do
   [
     ...,
-    {:waffle_storage_google, "~> 0.1"}
+    {:waffle_storage_google, "~> 0.0.2"}
   ]
 end
 ```
@@ -83,7 +83,6 @@ The list of all the supported attributes can be found here: https://hexdocs.pm/g
 
 Currently this is just a fork fixed to use Goth v4 but the plan is to:
 
-- migrate from HTTPoison to Finch for making requests
 - support service accounts / metadata
 - switch URL signing algorithm to V4 by default (service accounts)
 - more flexible configuration, to allow reusing application's own Goth instance
